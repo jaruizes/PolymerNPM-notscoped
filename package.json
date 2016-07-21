@@ -20,8 +20,7 @@
     "sync-request": "^2.2.0"
   },
   "scripts": {
-    "install": "npm install npm -g && gulp transform-polymer-libs",
-    "postinstall": "gulp publish-polymer-libs"
+    "postinstall":"gulp transform-polymer-libs"
   },
   "engines": {
     "node": ">=0.10.0"

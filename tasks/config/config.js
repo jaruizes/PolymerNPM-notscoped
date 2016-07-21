@@ -8,12 +8,12 @@ module.exports = function () {
   var root = __dirname + '/../../';
   console.log('Config: Using ' + root + ' as root directory');
 
-
   var config = {
     root: root,
     polymerNPM: root + 'polymerNPM',
-    ingModules: root + '/polymerNPM/ing_modules',
-    nodeModules: root + '/polymerNPM/node_modules'
+    newModules: root + 'polymerNPM/new_packages',
+    nodeModules: root + 'polymerNPM/node_modules',
+    polymerScopePackage: '@polymer'
   };
 
   return config;

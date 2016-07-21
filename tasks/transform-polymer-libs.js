@@ -1,8 +1,8 @@
 /**
- * Copy polymer libs for demo components to demolibs ir order to get
+ * Copies polymer libs for demo components to demolibs ir order to get
  * a flat folder lib
  */
-module.exports = function (gulp, $) {
+module.exports = function (gulp, $, args, config) {
   'use strict';
 
   var rename = require('gulp-rename');
@@ -14,58 +14,58 @@ module.exports = function (gulp, $) {
 
   return function () {
     console.log('Installing node packages...');
-    installOriginalPackages();
-    return gulp.src([config.nodeModules + '/polymerNPM/node_modules/@polymer/**'])
-      .pipe(rename(function (path) {
-        path.dirname = 'ing.polymer.' + path.dirname;
-      }))
-      .pipe(gulp.dest(config.ingModules))
-      .on('end', modifyPackages);
-  };
-
-  function installOriginalPackages() {
     utils.execSync('npm install', config.polymerNPM);
-  }
+    return _createNewPackages();
 
-  function modifyPackages() {
-    var libs = glob.sync([config.ingModules + '/*/package.json']);
-    for (var i=0; i<libs.length; i++) {
-      var newPackageFile = {};
-      var packageFile = libs[i];
-      var packageContent = require(packageFile);
-      var newName = '';
-      var oldName = packageContent.name;
+    function _createNewPackages() {
+      console.log('Creating ' + config.newModules + ' from ' + config.nodeModules + '/ ' + config.polymerScopePackage + ' .....');
+      return gulp.src([config.nodeModules + '/' + config.polymerScopePackage + '/**/*'])
+          .pipe(rename(function (path) {
+            path.dirname = 'ing.polymer.' + path.dirname;
+          }))
+          .pipe(gulp.dest(config.newModules))
+          .on('end', _modifyPackages);
 
-      for (var prop in packageContent) {
-        if (prop.indexOf('_') !== 0) {
-          var value = packageContent[prop];
-          if (prop === 'name') {
-            newName = value.replace('@', 'ing.').replace('/','.');
-            console.log('[' + oldName + '] Modifying package file to ' + newName);
-            value = newName;
+      function _modifyPackages() {
+        var libs = glob.sync([config.newModules + '/*/package.json']);
+        for (var i=0; i<libs.length; i++) {
+          var newPackageFile = {};
+          var packageFile = libs[i];
+          var packageContent = require(packageFile);
+          var newName = '';
+          var oldName = packageContent.name;
+
+          for (var prop in packageContent) {
+            if (prop.indexOf('_') !== 0) {
+              var value = packageContent[prop];
+              if (prop === 'name') {
+                newName = value.replace('@', 'ing.').replace('/','.');
+                console.log('[' + oldName + '] Modifying package file to ' + newName);
+                value = newName;
+              }
+              if ((prop === 'devDependencies' || prop === 'dependencies') && value) {
+                console.log('[' + oldName + '] Modifying ' + prop);
+                value = modifyDependency(value);
+              }
+
+              newPackageFile[prop] = value;
+            }
           }
-          if ((prop === 'devDependencies' || prop === 'dependencies') && value) {
-            console.log('[' + oldName + '] Modifying ' + prop);
-            value = modifyDependency(value);
+
+          utils.writeFileSync(packageFile, JSON.stringify(newPackageFile));
+        }
+
+        function modifyDependency(dependencies) {
+          var newDependencies = {};
+          for (var dependency in dependencies) {
+            var value = dependencies[dependency];
+            var name = dependency.replace('@', 'ing.').replace('/','.');
+            newDependencies[name] = value;
           }
 
-          newPackageFile[prop] = value;
+          return newDependencies;
         }
       }
-
-      utils.writeFileSync(packageFile, JSON.stringify(newPackageFile));
     }
-
-    function modifyDependency(dependencies) {
-      var newDependencies = {};
-      for (var dependency in dependencies) {
-        var value = dependencies[dependency];
-        var name = dependency.replace('@', 'ing.').replace('/','.');
-        newDependencies[name] = value;
-      }
-
-      return newDependencies;
-    }
-  }
-
+  };
 };

@@ -14,12 +14,10 @@ module.exports = function (gulp, $, args, config) {
   };
 
   function publishPackages() {
-    var libs = glob.sync([config.ingModules + '/*/package.json']);
-    console.log(config.ingModules + '/*/package.json');
-    console.log(libs);
+    var libs = glob.sync([config.newModules + '/*/package.json']);
 
     if (!libs || libs.length === 0) {
-      console.log('No se han encontrado candidatos');
+      console.log('There are no packages to publish');
     }
     for (var i=0; i<libs.length; i++) {
       var packageFile = libs[i];
