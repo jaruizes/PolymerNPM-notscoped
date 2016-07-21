@@ -1,0 +1,29 @@
+{
+  "name": "npm-polymerlibs",
+  "version": "1.0.0",
+  "description": "Librerías Polymer versión ING",
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "fs-extra": "^0.30.0",
+    "glob-all": "^3.0.1",
+    "gulp": "^3.8.5",
+    "gulp-clean": "^0.3.2",
+    "gulp-load-plugins": "^1.1.0",
+    "gulp-rename": "^1.2.0",
+    "gulp-replace": "^0.5.4",
+    "yargs": "^3.18.0",
+    "async": "^2.0.0-rc.6",
+    "del": "^2.2.1",
+    "gulp-util": "^3.0.7",
+    "sync-exec": "^0.6.2",
+    "sync-request": "^2.2.0"
+  },
+  "scripts": {
+    "install": "npm install npm -g && gulp transform-polymer-libs",
+    "postinstall": "gulp publish-polymer-libs"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  }
+}

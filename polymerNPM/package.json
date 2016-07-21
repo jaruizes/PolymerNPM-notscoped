@@ -1,0 +1,13 @@
+{
+  "name": "ing.polysoma-components-dependencies",
+  "version": "1.0.0",
+  "description": "Dependencias del catálogo de componentes de Polymer para ING",
+  "author": "",
+  "license": "ISC",
+  "private": true,
+  "dependencies": {
+    "@polymer/polymer": "latest",
+    "@polymer/paper-elements": "latest",
+    "@polymer/iron-elements": "latest"
+  }
+}
